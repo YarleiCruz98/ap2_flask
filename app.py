@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from controllers.ap2_escola_controller import school_blueprint
@@ -18,7 +18,7 @@ app.register_blueprint(school_blueprint, url_prefix='/school')
 
 @app.route('/')
 def index():
-    return "Sistema de gerenciamento escolar"
+    return render_template('ap2_escola_views.html', output='')
 
 if __name__ == '__main__':
     with app.app_context():

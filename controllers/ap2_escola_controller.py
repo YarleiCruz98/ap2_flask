@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from models.ap2_escola_models import db, Professor, Aluno, Turma
+from datetime import datetime
 
 school_blueprint = Blueprint('school', __name__)
 
@@ -53,7 +54,6 @@ def delete_professor(id):
     db.session.commit()
     return jsonify({'message': 'Professor deletado com sucesso'})
 
-
 # Rotas para Turmas
 @school_blueprint.route('/turmas', methods=['GET'])
 def get_turmas():
@@ -102,7 +102,6 @@ def delete_turma(id):
     db.session.commit()
     return jsonify({'message': 'Turma deletada com sucesso'})
 
-
 # Rotas para Alunos
 @school_blueprint.route('/alunos', methods=['GET'])
 def get_alunos():
@@ -119,19 +118,24 @@ def get_aluno(id):
 @school_blueprint.route('/alunos', methods=['POST'])
 def create_aluno():
     data = request.json
-    new_aluno = Aluno(
-        nome=data['nome'],
-        idade=data['idade'],
-        data_nascimento=data['data_nascimento'],
-        nota_primeiro_semestre=data['nota_primeiro_semestre'],
-        nota_segundo_semestre=data['nota_segundo_semestre'],
-        media_final=data['media_final'],
-        turma_id=data['turma_id']
-    )
-    new_aluno.calcular_media_final()  # Calcula a média final
-    db.session.add(new_aluno)
-    db.session.commit()
-    return jsonify(new_aluno.to_dict()), 201
+    try:
+        # Converte a string de data_nascimento para um objeto date
+        data_nascimento = datetime.strptime(data['data_nascimento'], '%Y-%m-%d').date()
+        
+        new_aluno = Aluno(
+            nome=data['nome'],
+            idade=data['idade'],
+            data_nascimento=data_nascimento,
+            turma_id=data['turma_id']
+        )
+        
+        db.session.add(new_aluno)
+        db.session.commit()
+        return jsonify(new_aluno.to_dict()), 201
+    except ValueError as e:
+        return jsonify({'message': 'Data de nascimento inválida'}), 400
+    except Exception as e:
+        return jsonify({'message': 'Erro ao criar aluno: {}'.format(str(e))}), 500
 
 @school_blueprint.route('/alunos/<int:id>', methods=['PUT'])
 def update_aluno(id):
@@ -143,9 +147,6 @@ def update_aluno(id):
     aluno.nome = data.get('nome', aluno.nome)
     aluno.idade = data.get('idade', aluno.idade)
     aluno.turma_id = data.get('turma_id', aluno.turma_id)
-    aluno.nota_primeiro_semestre = data.get('nota_primeiro_semestre', aluno.nota_primeiro_semestre)
-    aluno.nota_segundo_semestre = data.get('nota_segundo_semestre', aluno.nota_segundo_semestre)
-    aluno.calcular_media_final()  # Atualiza a média final
     db.session.commit()
     return jsonify(aluno.to_dict())
 
