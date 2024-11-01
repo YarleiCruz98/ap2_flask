@@ -180,12 +180,15 @@ def get_alunos():
     alunos = Aluno.query.all()
     return jsonify([a.to_dict() for a in alunos])
 
-@school_blueprint.route('/alunos/<int:id>', methods=['GET'])
-def get_aluno(id):
-    aluno = Aluno.query.get(id)
-    if aluno:
-        return jsonify(aluno.to_dict())
-    return jsonify({'message': 'Aluno não encontrado'}), 404
+@school_blueprint.route('/aluno', methods=['GET'])
+def get_aluno():
+    id = request.args.get('id')  # Captura o ID da query string
+    if id is not None:
+        aluno = Aluno.query.get(id)
+        if aluno:
+            return jsonify(aluno.to_dict())
+        return jsonify({'message': 'Aluno não encontrado'}), 404
+    return jsonify({'message': 'ID não fornecido'}), 400
 
 @school_blueprint.route('/alunos', methods=['POST'])
 def create_aluno():
@@ -204,30 +207,58 @@ def create_aluno():
         db.session.add(new_aluno)
         db.session.commit()
         return jsonify(new_aluno.to_dict()), 201
-    except ValueError as e:
+    except ValueError:
         return jsonify({'message': 'Data de nascimento inválida'}), 400
     except Exception as e:
         return jsonify({'message': 'Erro ao criar aluno: {}'.format(str(e))}), 500
 
-@school_blueprint.route('/alunos/<int:id>', methods=['PUT'])
-def update_aluno(id):
-    aluno = Aluno.query.get(id)
-    if not aluno:
-        return jsonify({'message': 'Aluno não encontrado'}), 404
+@school_blueprint.route('/alunos/update', methods=['POST'])
+def update_aluno():
+    # Verifica se o método é um PUT simulado
+    if request.form.get('_method') == 'PUT':
+        id = request.form.get('id')
+        if id is None:
+            return jsonify({'message': 'ID não fornecido'}), 400
 
-    data = request.form
-    aluno.nome = data.get('nome', aluno.nome)
-    aluno.idade = data.get('idade', aluno.idade)
-    aluno.turma_id = data.get('turma_id', aluno.turma_id)
-    db.session.commit()
-    return jsonify(aluno.to_dict())
+        try:
+            id = int(id)
+        except ValueError:
+            return jsonify({'message': 'ID inválido'}), 400
 
-@school_blueprint.route('/alunos/<int:id>', methods=['DELETE'])
-def delete_aluno(id):
-    aluno = Aluno.query.get(id)
-    if not aluno:
-        return jsonify({'message': 'Aluno não encontrado'}), 404
+        aluno = Aluno.query.get(id)
+        if not aluno:
+            return jsonify({'message': 'Aluno não encontrado'}), 404
 
-    db.session.delete(aluno)
-    db.session.commit()
-    return jsonify({'message': 'Aluno deletado com sucesso'})
+        # Atualiza os campos do aluno
+        aluno.nome = request.form.get('nome', aluno.nome)
+        aluno.idade = request.form.get('idade', aluno.idade)
+        aluno.turma_id = request.form.get('turma_id', aluno.turma_id)
+        db.session.commit()
+        return jsonify(aluno.to_dict())
+
+    # Se não for PUT, trate como um POST normal (ou retorne um erro)
+    return jsonify({'message': 'Método não permitido'}), 405
+
+@school_blueprint.route('/alunos/delete', methods=['POST'])
+def delete_aluno():
+    # Verifica se o método é um DELETE simulado
+    if request.form.get('_method') == 'DELETE':
+        id = request.form.get('id')
+        if id is None:
+            return jsonify({'message': 'ID não fornecido'}), 400
+
+        try:
+            id = int(id)
+        except ValueError:
+            return jsonify({'message': 'ID inválido'}), 400
+
+        aluno = Aluno.query.get(id)
+        if not aluno:
+            return jsonify({'message': 'Aluno não encontrado'}), 404
+
+        db.session.delete(aluno)
+        db.session.commit()
+        return jsonify({'message': 'Aluno deletado com sucesso'})
+
+    # Se não for um DELETE simulado, retorne um erro ou trate de acordo
+    return jsonify({'message': 'Método não permitido'}), 405
