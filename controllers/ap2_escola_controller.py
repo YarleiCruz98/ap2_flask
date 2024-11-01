@@ -95,12 +95,15 @@ def get_turmas():
     turmas = Turma.query.all()
     return jsonify([t.to_dict() for t in turmas])
 
-@school_blueprint.route('/turmas/<int:id>', methods=['GET'])
-def get_turma(id):
-    turma = Turma.query.get(id)
-    if turma:
-        return jsonify(turma.to_dict())
-    return jsonify({'message': 'Turma não encontrada'}), 404
+@school_blueprint.route('/turma', methods=['GET'])
+def get_turma():
+    id = request.args.get('id')  # Captura o ID da query string
+    if id is not None:
+        turma = Turma.query.get(id)
+        if turma:
+            return jsonify(turma.to_dict())
+        return jsonify({'message': 'Turma não encontrada'}), 404
+    return jsonify({'message': 'ID não fornecido'}), 400
 
 @school_blueprint.route('/turmas', methods=['POST'])
 def create_turma():
@@ -115,28 +118,61 @@ def create_turma():
     db.session.commit()
     return jsonify(new_turma.to_dict()), 201
 
-@school_blueprint.route('/turmas/<int:id>', methods=['PUT'])
-def update_turma(id):
-    turma = Turma.query.get(id)
-    if not turma:
-        return jsonify({'message': 'Turma não encontrada'}), 404
+@school_blueprint.route('/turmas/update', methods=['POST'])
+def update_turma():
+    # Verifica se o método é um PUT simulado
+    if request.form.get('_method') == 'PUT':
+        id = request.form.get('id')
+        if id is None:
+            return jsonify({'message': 'ID não fornecido'}), 400
 
-    data = request.form
-    turma.descricao = data.get('descricao', turma.descricao)
-    turma.ativo = data.get('ativo', turma.ativo)
-    turma.professor_id = data.get('professor_id', turma.professor_id)
-    db.session.commit()
-    return jsonify(turma.to_dict())
+        try:
+            id = int(id)
+        except ValueError:
+            return jsonify({'message': 'ID inválido'}), 400
 
-@school_blueprint.route('/turmas/<int:id>', methods=['DELETE'])
-def delete_turma(id):
-    turma = Turma.query.get(id)
-    if not turma:
-        return jsonify({'message': 'Turma não encontrada'}), 404
+        turma = Turma.query.get(id)
+        if not turma:
+            return jsonify({'message': 'Turma não encontrada'}), 404
 
-    db.session.delete(turma)
-    db.session.commit()
-    return jsonify({'message': 'Turma deletada com sucesso'})
+        # Atualiza os campos da turma
+        turma.descricao = request.form.get('descricao', turma.descricao)
+        
+        # Aqui convertemos o valor 'ativo' para booleano
+        turma.ativo = request.form.get('ativo') == 'on'  # Converte 'on' para True e não-setado para False
+        
+        turma.professor_id = request.form.get('professor_id', turma.professor_id)
+        db.session.commit()
+        return jsonify(turma.to_dict())
+
+    # Se não for PUT, trate como um POST normal (ou retorne um erro)
+    return jsonify({'message': 'Método não permitido'}), 405
+
+
+@school_blueprint.route('/turmas/delete', methods=['POST'])
+def delete_turma():
+    # Verifica se o método é um DELETE simulado
+    if request.form.get('_method') == 'DELETE':
+        id = request.form.get('id')
+        if id is None:
+            return jsonify({'message': 'ID não fornecido'}), 400
+
+        try:
+            id = int(id)
+        except ValueError:
+            return jsonify({'message': 'ID inválido'}), 400
+
+        turma = Turma.query.get(id)
+        if not turma:
+            return jsonify({'message': 'Turma não encontrada'}), 404
+
+        db.session.delete(turma)
+        db.session.commit()
+        return jsonify({'message': 'Turma deletada com sucesso'})
+
+    # Se não for um DELETE simulado, retorne um erro ou trate de acordo
+    return jsonify({'message': 'Método não permitido'}), 405
+
 
 # Rotas para Alunos
 @school_blueprint.route('/alunos', methods=['GET'])

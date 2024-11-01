@@ -136,7 +136,7 @@
         </form>
 
         <!-- Consultar Turma por ID -->
-        <form action="{{ url_for('school.get_turma', id=0) }}" method="get">
+        <form action="{{ url_for('school.get_turma') }}" method="get">
             <label for="turma_id">ID da Turma:</label>
             <input type="number" name="id" id="turma_id" required>
             <button type="submit">Consultar Turma</button>
@@ -151,18 +151,18 @@
         </form>
 
         <!-- Atualizar Turma -->
-        <form action="{{ url_for('school.update_turma', id=0) }}" method="post">
-            <input type="hidden" name="_method" value="PUT">
+        <form action="{{ url_for('school.update_turma') }}" method="post">
+            <input type="hidden" name="_method" value="PUT"> <!-- Simulando PUT -->
             <label>ID da Turma:</label><input type="number" name="id" required><br>
-            <label>Descrição:</label><input type="text" name="descricao"><br>
-            <label>Ativo:</label><input type="checkbox" name="ativo"><br>
-            <label>ID do Professor:</label><input type="number" name="professor_id"><br>
+            <label>Descrição:</label><input type="text" name="descricao" placeholder="Descrição da Turma"><br>
+            <label>Ativo:</label><input type="checkbox" name="ativo" checked><br>
+            <label>ID do Professor:</label><input type="number" name="professor_id" placeholder="ID do Professor"><br>
             <button type="submit">Atualizar Turma</button>
         </form>
 
         <!-- Excluir Turma -->
-        <form action="{{ url_for('school.delete_turma', id=0) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE">
+        <form action="{{ url_for('school.delete_turma') }}" method="post">
+            <input type="hidden" name="_method" value="DELETE"> <!-- Simulando DELETE -->
             <label>ID da Turma:</label><input type="number" name="id" required><br>
             <button type="submit">Excluir Turma</button>
         </form>
