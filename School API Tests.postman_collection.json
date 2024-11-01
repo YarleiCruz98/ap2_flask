@@ -1,7 +1,8 @@
 {
 	"info": {
-		"_postman_id": "52911fa4-252f-4c95-b2cd-513792cb40b7",
-		"name": "API Escola",
+		"_postman_id": "7dcee2f3-fba7-4e5c-bca0-74d4d45dc27b",
+		"name": "School API Tests",
+		"description": "Testes para a API da escola",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "31362639"
 	},
@@ -10,7 +11,7 @@
 			"name": "Professores",
 			"item": [
 				{
-					"name": "Get all Professores",
+					"name": "Get All Professores",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -33,8 +34,25 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\"nome\":\"João Silva\",\"idade\":30,\"materia\":\"Matemática\",\"observacoes\":\"Profissional experiente\"}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nome",
+									"value": "Professor A"
+								},
+								{
+									"key": "idade",
+									"value": "30"
+								},
+								{
+									"key": "materia",
+									"value": "Matemática"
+								},
+								{
+									"key": "observacoes",
+									"value": "Ótimo professor."
+								}
+							]
 						},
 						"url": "http://0.0.0.0:8000/school/professores"
 					},
@@ -46,8 +64,17 @@
 						"method": "PUT",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\"nome\":\"João Silva\",\"idade\":31,\"materia\":\"Física\"}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nome",
+									"value": "Professor Atualizado"
+								},
+								{
+									"key": "idade",
+									"value": "31"
+								}
+							]
 						},
 						"url": "http://0.0.0.0:8000/school/professores/1"
 					},
@@ -68,7 +95,7 @@
 			"name": "Turmas",
 			"item": [
 				{
-					"name": "Get all Turmas",
+					"name": "Get All Turmas",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -91,8 +118,21 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\"descricao\":\"Turma A\",\"ativo\":true,\"professor_id\":1}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "descricao",
+									"value": "Turma de Matemática"
+								},
+								{
+									"key": "ativo",
+									"value": "true"
+								},
+								{
+									"key": "professor_id",
+									"value": "1"
+								}
+							]
 						},
 						"url": "http://0.0.0.0:8000/school/turmas"
 					},
@@ -104,8 +144,13 @@
 						"method": "PUT",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\"descricao\":\"Turma A - Atualizada\",\"ativo\":false}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "descricao",
+									"value": "Turma de Física"
+								}
+							]
 						},
 						"url": "http://0.0.0.0:8000/school/turmas/1"
 					},
@@ -126,7 +171,7 @@
 			"name": "Alunos",
 			"item": [
 				{
-					"name": "Get all Alunos",
+					"name": "Get All Alunos",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -149,8 +194,25 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\"nome\":\"Maria Oliveira\",\"idade\":15,\"data_nascimento\":\"2008-06-15\",\"turma_id\":1}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nome",
+									"value": "Aluno A"
+								},
+								{
+									"key": "idade",
+									"value": "10"
+								},
+								{
+									"key": "data_nascimento",
+									"value": "2013-01-01"
+								},
+								{
+									"key": "turma_id",
+									"value": "1"
+								}
+							]
 						},
 						"url": "http://0.0.0.0:8000/school/alunos"
 					},
@@ -162,8 +224,13 @@
 						"method": "PUT",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\"nome\":\"Maria Oliveira\",\"idade\":16}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nome",
+									"value": "Aluno Atualizado"
+								}
+							]
 						},
 						"url": "http://0.0.0.0:8000/school/alunos/1"
 					},

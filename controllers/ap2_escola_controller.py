@@ -19,7 +19,7 @@ def get_professor(id):
 
 @school_blueprint.route('/professores', methods=['POST'])
 def create_professor():
-    data = request.json
+    data = request.form
     new_professor = Professor(
         nome=data['nome'],
         idade=data['idade'],
@@ -36,7 +36,7 @@ def update_professor(id):
     if not professor:
         return jsonify({'message': 'Professor não encontrado'}), 404
 
-    data = request.json
+    data = request.form
     professor.nome = data.get('nome', professor.nome)
     professor.idade = data.get('idade', professor.idade)
     professor.materia = data.get('materia', professor.materia)
@@ -69,10 +69,11 @@ def get_turma(id):
 
 @school_blueprint.route('/turmas', methods=['POST'])
 def create_turma():
-    data = request.json
+    data = request.form
+    ativo = data.get('ativo', 'true').lower() == 'true'  # Converte para booleano
     new_turma = Turma(
         descricao=data['descricao'],
-        ativo=data.get('ativo', True),
+        ativo=ativo,
         professor_id=data['professor_id']
     )
     db.session.add(new_turma)
@@ -85,7 +86,7 @@ def update_turma(id):
     if not turma:
         return jsonify({'message': 'Turma não encontrada'}), 404
 
-    data = request.json
+    data = request.form
     turma.descricao = data.get('descricao', turma.descricao)
     turma.ativo = data.get('ativo', turma.ativo)
     turma.professor_id = data.get('professor_id', turma.professor_id)
@@ -117,7 +118,7 @@ def get_aluno(id):
 
 @school_blueprint.route('/alunos', methods=['POST'])
 def create_aluno():
-    data = request.json
+    data = request.form
     try:
         # Converte a string de data_nascimento para um objeto date
         data_nascimento = datetime.strptime(data['data_nascimento'], '%Y-%m-%d').date()
@@ -143,7 +144,7 @@ def update_aluno(id):
     if not aluno:
         return jsonify({'message': 'Aluno não encontrado'}), 404
 
-    data = request.json
+    data = request.form
     aluno.nome = data.get('nome', aluno.nome)
     aluno.idade = data.get('idade', aluno.idade)
     aluno.turma_id = data.get('turma_id', aluno.turma_id)
