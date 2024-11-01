@@ -83,11 +83,12 @@
         </form>
 
         <!-- Consultar Professor por ID -->
-        <form action="{{ url_for('school.get_professor', id=0) }}" method="get">
+        <form action="{{ url_for('school.get_professor') }}" method="get">
             <label for="professor_id">ID do Professor:</label>
             <input type="number" name="id" id="professor_id" required>
             <button type="submit">Consultar Professor</button>
         </form>
+
 
         <!-- Criar Professor -->
         <form action="{{ url_for('school.create_professor') }}" method="post">
@@ -99,22 +100,30 @@
         </form>
 
         <!-- Atualizar Professor -->
-        <form action="{{ url_for('school.update_professor', id=0) }}" method="post">
-            <input type="hidden" name="_method" value="PUT">
-            <label>ID do Professor:</label><input type="number" name="id" required><br>
-            <label>Nome:</label><input type="text" name="nome"><br>
-            <label>Idade:</label><input type="number" name="idade"><br>
-            <label>Matéria:</label><input type="text" name="materia"><br>
-            <label>Observações:</label><input type="text" name="observacoes"><br>
+        <form action="{{ url_for('school.update_professor') }}" method="post">
+            <input type="hidden" name="_method" value="PUT"> <!-- Simulando PUT -->
+            <label>ID do Professor:</label>
+            <input type="number" name="id" required><br>
+            <label>Nome:</label>
+            <input type="text" name="nome" placeholder="Nome do Professor"><br>
+            <label>Idade:</label>
+            <input type="number" name="idade" placeholder="Idade do Professor"><br>
+            <label>Matéria:</label>
+            <input type="text" name="materia" placeholder="Matéria do Professor"><br>
+            <label>Observações:</label>
+            <input type="text" name="observacoes" placeholder="Observações adicionais"><br>
             <button type="submit">Atualizar Professor</button>
         </form>
 
+
         <!-- Excluir Professor -->
-        <form action="{{ url_for('school.delete_professor', id=0) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE">
-            <label>ID do Professor:</label><input type="number" name="id" required><br>
+        <form action="{{ url_for('school.delete_professor') }}" method="post">
+            <input type="hidden" name="_method" value="DELETE"> <!-- Simulando DELETE -->
+            <label>ID do Professor:</label>
+            <input type="number" name="id" required><br>
             <button type="submit">Excluir Professor</button>
         </form>
+
     </section>
 
     <!-- Turmas -->
